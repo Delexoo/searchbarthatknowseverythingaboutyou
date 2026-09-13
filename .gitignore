@@ -14,6 +14,7 @@ ENV/
 .env.*
 !.env.example
 config.js
+dist/
 
 # Old Flask server with hardcoded keys
 app.py
