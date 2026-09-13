@@ -1,4 +1,10 @@
         const API_BASE = (location.protocol === 'file:') ? 'http://localhost:8080' : '';
+
+        function friendlyStatus(message) {
+            const text = String(message || '').trim();
+            if (!text || /^(error:\s*)?user not found\.?$/i.test(text)) return 'coming soon';
+            return text;
+        }
         const APP_CONFIG = window.APP_CONFIG || {};
         const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
         const OPENROUTER_MODELS = [
@@ -35,7 +41,7 @@
                 } else if (type === 'username') {
                     const response = await fetch('https://api.github.com/users/' + encodeURIComponent(value));
                     if (response.ok) parts.push('GitHub profile: ' + JSON.stringify(await response.json()));
-                    else if (response.status === 404) parts.push('GitHub: no user named ' + value);
+                    else if (response.status === 404) parts.push('coming soon');
                 } else if (type === 'email') {
                     const domain = value.split('@')[1];
                     if (domain) {
@@ -1274,7 +1280,7 @@
                 
                 let aiResponseText = '';
                 if (data.type === 'ai_response' && data.response) {
-                    aiResponseText = data.response;
+                    aiResponseText = friendlyStatus(data.response);
                     logFrontend('AI response received', `len: ${data.response.length}`);
                 } else if (data.reply) {
                     aiResponseText = data.reply;
@@ -1293,9 +1299,11 @@
                     aiResponseText = data.response;
                     logFrontend('AI response (fallback)', `len: ${data.response.length}`);
                 } else {
-                    aiResponseText = 'Error: ' + (data.error || 'Unknown error. Response: ' + JSON.stringify(data));
+                    aiResponseText = friendlyStatus(data.error || 'Unknown error');
                     logFrontend('Unexpected response format', JSON.stringify(data).substring(0, 100));
                 }
+
+                aiResponseText = friendlyStatus(aiResponseText);
                 
                 // Update the last message in history with AI response
                 if (conversationHistory.length > 0) {
@@ -1318,11 +1326,9 @@
                     sendButtonInner.classList.remove('generating');
                     isGenerating = false;
                     // More specific error message
-                    let errorMsg = 'Error: Could not connect to the server.';
-                    if (error.message) {
-                        errorMsg = `Error: ${error.message}`;
-                    } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                        errorMsg = 'Error: Server connection failed. Double-click start.bat (or run npm start) and open http://localhost:8080';
+                    let errorMsg = 'coming soon';
+                    if (error.message && !/user not found/i.test(error.message)) {
+                        errorMsg = friendlyStatus(error.message);
                     }
                     aiResponse.textContent = errorMsg;
                     aiResponse.classList.add('show');

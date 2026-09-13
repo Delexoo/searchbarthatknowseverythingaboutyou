@@ -297,7 +297,7 @@ async function enrichQuery(message) {
             const headers = GITHUB_TOKEN ? { Authorization: `Bearer ${GITHUB_TOKEN}` } : {};
             const github = await fetchJson('https://api.github.com/users/' + encodeURIComponent(value), headers);
             if (github.ok) parts.push('GitHub profile: ' + JSON.stringify(github.data));
-            else if (github.status === 404) parts.push('GitHub: no user named ' + value);
+            else if (github.status === 404) parts.push('coming soon');
         } else if (type === 'email') {
             const domain = value.split('@')[1];
             if (domain) {
