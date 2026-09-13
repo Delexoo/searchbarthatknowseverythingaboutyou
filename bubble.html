@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            max-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #0f0f0f;
+            overflow: hidden;
+            color: #e4e4e7;
+        }
+        
+        html {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+
+        .bubble {
+            width: 200px;
+            height: 200px;
+            min-width: 100px;
+            min-height: 100px;
+            border-radius: 50%;
+            background: #18181b;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bubble:hover:not(:focus-within) {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: #1f1f23;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .bubble:focus-within {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: #1f1f23;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .bubble-input {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #e4e4e7;
+            font-size: 48px;
+            font-weight: 500;
+            font-family: inherit;
+            text-align: center;
+            resize: none;
+            overflow: hidden;
+            word-wrap: normal;
+            white-space: nowrap;
+            padding: 0 20px;
+            line-height: 200px;
+            cursor: text;
+            display: block;
+            box-sizing: border-box;
+            transition: line-height 0.3s ease;
+        }
+
+        .bubble-input::placeholder {
+            color: #e4e4e7;
+            opacity: 0.7;
+        }
+
+        .search-bars-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        .search-bar {
+            position: absolute;
+            min-width: 80px;
+            max-width: 300px;
+            width: auto;
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            font-size: 14px;
+            outline: none;
+            background: #18181b;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #e4e4e7;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            pointer-events: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .search-bar:hover:not(:focus) {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: #1f1f23;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .search-bar:focus {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: #1f1f23;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .search-bar::placeholder {
+            color: rgba(228, 228, 231, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="bubble">
+        <textarea 
+            class="bubble-input" 
+            id="bubbleInput"
+            autofocus
+            spellcheck="false"
+        >OSINT</textarea>
+    </div>
+
+    <div class="search-bars-container">
+        <input type="text" class="search-bar" id="phoneSearchBar" placeholder="Phone Number" spellcheck="false" />
+        <input type="text" class="search-bar" id="nameSearchBar" placeholder="Name" spellcheck="false" />
+        <input type="text" class="search-bar" id="emailSearchBar" placeholder="Email" spellcheck="false" />
+        <input type="text" class="search-bar" id="imageSearchBar" placeholder="Image" spellcheck="false" />
+        <input type="text" class="search-bar" id="usernameSearchBar" placeholder="Username" spellcheck="false" />
+        <input type="text" class="search-bar" id="addressSearchBar" placeholder="Address" spellcheck="false" />
+        <input type="text" class="search-bar" id="passwordsSearchBar" placeholder="Passwords" spellcheck="false" />
+        <input type="text" class="search-bar" id="socialMediaSearchBar" placeholder="Social Media" spellcheck="false" />
+        <input type="text" class="search-bar" id="audioSearchBar" placeholder="Audio" spellcheck="false" />
+        <input type="text" class="search-bar" id="wifiSearchBar" placeholder="WiFi Name" spellcheck="false" />
+        <input type="text" class="search-bar" id="ipAddressSearchBar" placeholder="IP Address" spellcheck="false" />
+        <input type="text" class="search-bar" id="licensePlateSearchBar" placeholder="Vehicle License Plate" spellcheck="false" />
+        <input type="text" class="search-bar" id="publicRecordSearchBar" placeholder="Public Record" spellcheck="false" />
+        <input type="text" class="search-bar" id="domainSearchBar" placeholder="Website Domain" spellcheck="false" />
+        <input type="text" class="search-bar" id="behaviorSearchBar" placeholder="Behavior" spellcheck="false" />
+        <input type="text" class="search-bar" id="cryptoSearchBar" placeholder="Crypto Wallet" spellcheck="false" />
+        <input type="text" class="search-bar" id="macAddressSearchBar" placeholder="MAC Address" spellcheck="false" />
+        <input type="text" class="search-bar" id="barcodeSearchBar" placeholder="Barcode" spellcheck="false" />
+    </div>
+
+    <script>
+        const bubble = document.querySelector('.bubble');
+        const bubbleInput = document.getElementById('bubbleInput');
+        const padding = 60; // Total horizontal padding
+        const absoluteMinSize = 100; // Absolute minimum to maintain usability
+
+        function resizeBubble() {
+            const text = bubbleInput.value || '';
+            const fontSize = parseFloat(getComputedStyle(bubbleInput).fontSize) || 48;
+            
+            // Create a temporary element to measure text width accurately
+            const tempSpan = document.createElement('span');
+            tempSpan.style.fontSize = fontSize + 'px';
+            tempSpan.style.fontFamily = getComputedStyle(bubbleInput).fontFamily;
+            tempSpan.style.fontWeight = getComputedStyle(bubbleInput).fontWeight;
+            tempSpan.style.visibility = 'hidden';
+            tempSpan.style.position = 'absolute';
+            tempSpan.style.whiteSpace = 'nowrap';
+            tempSpan.style.padding = '0';
+            tempSpan.style.margin = '0';
+            tempSpan.textContent = text || 'M'; // Use 'M' as minimum width if empty
+            document.body.appendChild(tempSpan);
+            
+            const textWidth = tempSpan.offsetWidth;
+            document.body.removeChild(tempSpan);
+            
+            // Calculate bubble size based on text width + padding
+            const calculatedSize = textWidth + padding;
+            
+            // Apply absolute minimum to maintain usability, but allow smaller sizes
+            const newSize = Math.max(absoluteMinSize, calculatedSize);
+            
+            // Ensure it doesn't exceed viewport
+            const maxSize = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.9);
+            const finalSize = Math.min(newSize, maxSize);
+            
+            // Update bubble size (maintain circular shape)
+            bubble.style.width = finalSize + 'px';
+            bubble.style.height = finalSize + 'px';
+            
+            // Update line-height to match bubble height for perfect vertical centering
+            bubbleInput.style.lineHeight = finalSize + 'px';
+            
+            // Reposition search bars when bubble resizes
+            positionSearchBars();
+        }
+
+        // Resize on input
+        bubbleInput.addEventListener('input', resizeBubble);
+        
+        // Initial resize
+        resizeBubble();
+
+        // Check if two search bars overlap
+        function checkOverlap(bar1, bar2) {
+            const rect1 = bar1.getBoundingClientRect();
+            const rect2 = bar2.getBoundingClientRect();
+            
+            const padding = 10; // Minimum spacing between bars
+            return !(
+                rect1.right + padding < rect2.left ||
+                rect1.left - padding > rect2.right ||
+                rect1.bottom + padding < rect2.top ||
+                rect1.top - padding > rect2.bottom
+            );
+        }
+
+        // Resize search bar based on content
+        function resizeSearchBar(bar) {
+            // Use placeholder if no value, otherwise use value
+            const text = bar.value || bar.placeholder || '';
+            const fontSize = parseFloat(getComputedStyle(bar).fontSize) || 14;
+            
+            // Create temporary element to measure text width
+            const tempSpan = document.createElement('span');
+            tempSpan.style.fontSize = fontSize + 'px';
+            tempSpan.style.fontFamily = getComputedStyle(bar).fontFamily;
+            tempSpan.style.visibility = 'hidden';
+            tempSpan.style.position = 'absolute';
+            tempSpan.style.whiteSpace = 'nowrap';
+            tempSpan.style.padding = '0';
+            tempSpan.style.margin = '0';
+            tempSpan.textContent = text || 'M';
+            document.body.appendChild(tempSpan);
+            
+            const textWidth = tempSpan.offsetWidth;
+            document.body.removeChild(tempSpan);
+            
+            // Calculate width: text width + padding (32px total: 16px each side)
+            const minWidth = 80;
+            const maxWidth = 300;
+            const padding = 32;
+            const calculatedWidth = textWidth + padding;
+            const newWidth = Math.max(minWidth, Math.min(maxWidth, calculatedWidth));
+            
+            bar.style.width = newWidth + 'px';
+        }
+
+        // Position search bars around the bubble in a perfect even circle
+        function positionSearchBars() {
+            // Get current bubble size (updates when bubble expands)
+            const bubbleRect = bubble.getBoundingClientRect();
+            const bubbleCenterX = window.innerWidth / 2;
+            const bubbleCenterY = window.innerHeight / 2;
+            const bubbleRadius = bubbleRect.width / 2;
+            
+            const searchBars = Array.from(document.querySelectorAll('.search-bar'));
+            const barHeight = 40;
+            
+            // Resize each bar based on its content
+            searchBars.forEach(bar => {
+                resizeSearchBar(bar);
+            });
+            
+            // Get the maximum bar width for radius calculation
+            const maxBarWidth = Math.max(...searchBars.map(bar => bar.offsetWidth || 100));
+            
+            // Calculate minimum radius to ensure bars are completely outside the bubble
+            // Use bubble radius + smaller gap + half max bar width
+            const minRadius = bubbleRadius + 15 + (maxBarWidth / 2);
+            
+            // Calculate minimum radius needed to fit all bars without overlap
+            const minSpacing = 10;
+            const totalWidth = searchBars.reduce((sum, bar) => sum + (bar.offsetWidth || 100), 0);
+            const circumference = totalWidth + (minSpacing * searchBars.length);
+            const minRadiusForSpacing = circumference / (2 * Math.PI);
+            
+            // Use the larger of: minimum to be outside bubble OR minimum for spacing
+            const radius = Math.max(minRadius, minRadiusForSpacing);
+            
+            // Evenly distribute bars in a perfect circle
+            const angleStep = (2 * Math.PI) / searchBars.length;
+            
+            searchBars.forEach((bar, index) => {
+                // Calculate angle for this bar (evenly spaced)
+                const angle = index * angleStep;
+                
+                // Calculate position on circle
+                const x = bubbleCenterX + Math.cos(angle) * radius;
+                const y = bubbleCenterY + Math.sin(angle) * radius;
+                
+                // Position bar centered on the calculated point
+                const barWidth = bar.offsetWidth || 100;
+                bar.style.left = (x - barWidth / 2) + 'px';
+                bar.style.top = (y - barHeight / 2) + 'px';
+            });
+        }
+
+        // Add input listeners to all search bars for dynamic resizing
+        document.querySelectorAll('.search-bar').forEach(bar => {
+            bar.addEventListener('input', () => {
+                resizeSearchBar(bar);
+                positionSearchBars();
+            });
+        });
+
+        // Update positions when bubble resizes or window resizes
+        window.addEventListener('resize', () => {
+            resizeBubble();
+            setTimeout(positionSearchBars, 100);
+        });
+
+        // Initial positioning
+        setTimeout(() => {
+            positionSearchBars();
+        }, 100);
+    </script>
+</body>
+</html>
